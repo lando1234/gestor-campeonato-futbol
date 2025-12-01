@@ -50,7 +50,7 @@ export default function ConfiguracionesPage() {
 
       {/* Configuration Sections Grid - Placeholder */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="bg-white border-2 border-gray-200 rounded-lg p-6 hover:border-blue-300 transition-colors cursor-pointer">
+        <a href="/admin/configuraciones/torneos" className="bg-white border-2 border-gray-200 rounded-lg p-6 hover:border-blue-300 transition-colors cursor-pointer">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900">Torneos</h3>
             <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,9 +60,9 @@ export default function ConfiguracionesPage() {
           <p className="text-sm text-gray-600">
             Configura fechas, formatos y reglas de los torneos
           </p>
-        </div>
+        </a>
 
-        <div className="bg-white border-2 border-gray-200 rounded-lg p-6 hover:border-blue-300 transition-colors cursor-pointer">
+        <a href="/admin/configuraciones/categorias" className="bg-white border-2 border-gray-200 rounded-lg p-6 hover:border-blue-300 transition-colors cursor-pointer">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900">Categorías</h3>
             <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,7 +72,7 @@ export default function ConfiguracionesPage() {
           <p className="text-sm text-gray-600">
             Gestiona categorías por edad y divisiones
           </p>
-        </div>
+        </a>
 
         <div className="bg-white border-2 border-gray-200 rounded-lg p-6 hover:border-blue-300 transition-colors cursor-pointer">
           <div className="flex items-center justify-between mb-4">
@@ -125,4 +125,3 @@ export default function ConfiguracionesPage() {
     </div>
   );
 }
-

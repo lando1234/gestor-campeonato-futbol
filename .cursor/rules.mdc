@@ -58,7 +58,8 @@ Example: "Use functional components and hooks for React UI."
 - Use a central `tailwind.config.js` per app, define design tokens (colors, typography, spacing).  
 - Write mobile-first styles and use responsive breakpoints (e.g., `sm:`, `md:`) wisely.  
 - For complex or repetitive class lists, use `@apply` to create reusable class names.  
-- Keep global styles in `src/styles/globals.css`; local styles via CSS Modules when needed.
+- Keep global styles in `src/styles/globals.css`; local styles via CSS Modules when needed.  
+- **All input fields (input, textarea, select) MUST include these classes**: `text-black` for text color and `placeholder:text-gray-400` for placeholder color to maintain consistency with the login form.
 
 ### 3.6 Prisma  
 
