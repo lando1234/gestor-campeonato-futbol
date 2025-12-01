@@ -1,9 +1,3 @@
-# Cursor Rules – Monorepo React/Next.js/TS/Tailwind/Prisma/Jest
-
-## 🎯 Purpose  
-
-Define how the Cursor agent should generate, refactor and document code for this monorepo to ensure readability, maintainability and architecture consistency.
-
 ## 1. Scope  
 
 These rules apply to:
