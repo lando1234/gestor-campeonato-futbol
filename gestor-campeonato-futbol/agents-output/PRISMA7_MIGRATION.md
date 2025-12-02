@@ -36,10 +36,13 @@ npm install @prisma/adapter-neon ws @types/ws
 - **Purpose**: Centralized Prisma client configuration with Neon adapter
 - **Features**:
   - Uses `@prisma/adapter-neon` for serverless connections
-  - Configures WebSocket support for Neon
+  - Configures WebSocket support for Neon (server-side only)
+  - **Lazy loading**: Client only created when accessed (prevents bundling issues)
+  - **Server-only imports**: Uses `require()` to load Prisma only on server
   - Singleton pattern for production (prevents connection pooling issues)
   - Global instance in development (improves hot-reload performance)
   - Exports `getPrismaClient()` helper for cases requiring fresh connections
+  - **Proxy pattern**: Ensures client is created on-demand, not at module load
 
 #### 3. `src/lib/services/categorias.service.ts`
 - **Change**: Updated all functions to use `getPrismaClient()` instead of `new PrismaClient()`

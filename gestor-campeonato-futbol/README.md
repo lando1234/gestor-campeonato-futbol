@@ -1,36 +1,178 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gestor Campeonato Fútbol ⚽
 
-## Getting Started
+Sistema de gestión para campeonatos de fútbol construido con Next.js 16, Prisma 7 y NextAuth.
 
-First, run the development server:
+## 🚀 Stack Tecnológico
+
+- **Framework**: Next.js 16.0.5 (App Router)
+- **Database**: PostgreSQL con Prisma 7.0.1
+- **Authentication**: NextAuth v5
+- **Styling**: Tailwind CSS 4
+- **Testing**: Jest + React Testing Library
+- **Deployment**: Vercel + Neon Database
+
+## 📋 Pre-requisitos
+
+- Node.js 20+
+- PostgreSQL (recomendado: Neon serverless)
+- npm o yarn
+
+## 🛠️ Instalación
+
+1. **Clonar el repositorio**
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <tu-repositorio>
+cd gestor-campeonato-futbol
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Instalar dependencias**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. **Configurar variables de entorno**
 
-## Learn More
+Crea un archivo `.env.local` en la raíz con:
 
-To learn more about Next.js, take a look at the following resources:
+```env
+DATABASE_URL="postgresql://user:password@host.neon.tech/dbname?sslmode=require"
+AUTH_SECRET="tu_secret_aqui"
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. **Generar Prisma Client**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npx prisma generate
+```
 
-## Deploy on Vercel
+5. **Ejecutar migraciones**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npx prisma migrate dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🏃‍♂️ Comandos Disponibles
+
+```bash
+# Desarrollo
+npm run dev
+
+# Build de producción
+npm run build
+
+# Build para Vercel
+npm run vercel-build
+
+# Ejecutar en producción
+npm start
+
+# Tests
+npm test
+
+# Tests en modo watch
+npm run test:watch
+
+# Cobertura de tests
+npm run test:coverage
+
+# Linter
+npm run lint
+
+# Crear usuario admin
+npm run create-admin
+
+# Generar secret de autenticación
+npm run generate-secret
+```
+
+## 📚 Documentación
+
+Toda la documentación técnica generada por agentes se encuentra en la carpeta [`agents-output/`](./agents-output/):
+
+- **[PRISMA7_MIGRATION.md](./agents-output/PRISMA7_MIGRATION.md)** - Guía de migración a Prisma 7
+- **[TROUBLESHOOTING.md](./agents-output/TROUBLESHOOTING.md)** - Solución de problemas comunes
+- **[VERCEL_BUILD_SUMMARY.md](./agents-output/VERCEL_BUILD_SUMMARY.md)** - Guía de deployment en Vercel
+- **[AUTH_README.md](./agents-output/AUTH_README.md)** - Configuración de autenticación
+- **[SETUP_AUTH.md](./agents-output/SETUP_AUTH.md)** - Setup inicial de autenticación
+- **[TESTING.md](./agents-output/TESTING.md)** - Guía de testing
+
+## 🏗️ Estructura del Proyecto
+
+```
+gestor-campeonato-futbol/
+├── src/
+│   ├── app/              # Rutas y páginas (App Router)
+│   │   ├── admin/        # Panel de administración
+│   │   ├── api/          # API Routes
+│   │   └── login/        # Página de login
+│   ├── components/       # Componentes React
+│   ├── lib/             # Utilidades y configuración
+│   │   ├── prisma.ts    # Cliente Prisma configurado
+│   │   ├── auth.ts      # Configuración NextAuth
+│   │   └── services/    # Servicios de negocio
+│   └── types/           # Definiciones TypeScript
+├── prisma/
+│   ├── schema.prisma    # Esquema de base de datos
+│   └── migrations/      # Migraciones
+├── agents-output/       # Documentación generada
+└── scripts/             # Scripts útiles
+
+```
+
+## 🔐 Autenticación
+
+El sistema usa NextAuth v5 con Credentials Provider. Usuario por defecto:
+
+- **Usuario**: admin
+- **Contraseña**: galaxia
+
+Para crear nuevos usuarios admin, ejecuta:
+
+```bash
+npm run create-admin
+```
+
+## 🧪 Testing
+
+El proyecto tiene cobertura de tests para:
+
+- ✅ Servicios de negocio
+- ✅ API Routes
+- ✅ Componentes React
+- ✅ Autenticación
+
+```bash
+# Ejecutar todos los tests
+npm test
+
+# Ver cobertura
+npm run test:coverage
+```
+
+## 🚀 Deploy en Vercel
+
+1. Conecta tu repositorio a Vercel
+2. Configura las variables de entorno:
+   - `DATABASE_URL`
+   - `AUTH_SECRET`
+3. Vercel usará automáticamente el comando `vercel-build`
+4. ¡Deploy exitoso! 🎉
+
+Ver [VERCEL_BUILD_SUMMARY.md](./agents-output/VERCEL_BUILD_SUMMARY.md) para más detalles.
+
+## 📖 Recursos
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Prisma Documentation](https://www.prisma.io/docs)
+- [NextAuth Documentation](https://next-auth.js.org)
+- [Tailwind CSS](https://tailwindcss.com/docs)
+
+## 🤝 Contribuir
+
+Este proyecto sigue las reglas definidas en `.cursor/rules.mdc`. Por favor, léelas antes de contribuir.
+
+---
+
+**Desarrollado con ❤️ usando Next.js y Prisma**
