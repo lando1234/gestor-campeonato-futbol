@@ -37,6 +37,8 @@ Example: "Use functional components and hooks for React UI."
 - For non-user-specific data use SSG/ISR; use SSR only when needed.  
 - Use `<Image>` component for images; keep SEO metadata (title, description, OpenGraph) configured.  
 - Never expose secrets on the client: store them in `.env.local`, etc.
+- **Next.js 16+**: Route parameters (`params`) in API routes are now `Promise<{}>`. Always `await params` before accessing properties.
+- **API Route Handlers**: Type params correctly as `{ params: Promise<{ id: string }> }` and destructure after awaiting: `const { id } = await params;`.
 
 ### 3.4 TypeScript  
 
@@ -62,6 +64,10 @@ Example: "Use functional components and hooks for React UI."
 - Do not access Prisma inside UI or component layers; use repository abstractions in `infrastructure/`.  
 - Use transactions (`prisma.$transaction`) for multi-step operations.  
 - Use `select`/`include` to fetch only needed fields; paginate large datasets; create indexes for high-load fields.
+- **Referential Integrity**: When creating/deleting records with related tables, ALWAYS use transactions to ensure data consistency.
+- **Example**: When creating a `categoria`, also create its `categoria_config` in the same transaction.
+- **Example**: When deleting a `categoria`, first delete related `categoria_config` records, then delete the categoria itself.
+- Always disconnect Prisma client in service layer using `finally` block: `await prisma.$disconnect()`.
 
 ### 3.7 Testing (Jest + React Testing Library)  
 
@@ -71,8 +77,19 @@ Example: "Use functional components and hooks for React UI."
 - In React tests, use React Testing Library to test user interactions and visible outcomes rather than implementation details.  
 - Mock external dependencies; include some integration tests for critical parts (DB, services).  
 - Maintain decent coverage but don't aim for 100% at all costs—focus on value.
+- **Framework Compatibility**: Keep tests updated with framework versions. For Next.js 16+ API route tests, mock params as Promises: `{ params: Promise.resolve({ id: '1' }) }`.
+- **TypeScript Checking**: Run `npx tsc --noEmit` before committing to catch type errors that tests might reveal.
+- **Test Before Deploy**: Always ensure tests pass locally before pushing to deployment platforms (Vercel, etc.).
 
-### 3.8 Documentation & Storybook  
+### 3.8 Version Control & Breaking Changes
+
+- When upgrading major framework versions (Next.js, React, etc.), review migration guides for breaking changes.
+- Document breaking changes in commit messages with clear descriptions.
+- Update all affected code paths (routes, components, tests) to match new API requirements.
+- Run full test suite and build after major version upgrades before committing.
+- Check for deprecated features and replace them proactively (e.g., Next.js middleware → proxy).
+
+### 3.9 Documentation & Storybook  
 
 - Each reusable UI component must have a Storybook story file (`*.stories.tsx`) demonstrating default state + variants.  
 - Use MDX stories when additional documentation is needed.  
@@ -81,7 +98,16 @@ Example: "Use functional components and hooks for React UI."
 - Maintain README at repo root explaining the monorepo structure and how to run dev/build/test.  
 - Keep docs/architecture.md (or similar) describing the Clean Architecture directory structure and decisions.
 
-### 3.9 Maintainability & Scalability  
+### 3.10 Deployment & Build (Vercel)
+
+- Always test production builds locally with `npm run build` before pushing to main/deployment branches.
+- Include `postinstall` script in `package.json` to run `prisma generate` for Vercel deployments.
+- Monitor TypeScript errors in build: Vercel will fail on TS errors that might be ignored in dev mode.
+- Use environment variables properly: configure them in Vercel dashboard and reference in `.env.example`.
+- Test with the same Node version that Vercel uses (check `engines` in `package.json`).
+- Never commit `.env` files; only commit `.env.example` with placeholder values.
+
+### 3.11 Maintainability & Scalability  
 
 - Domain layer must **not depend** on UI, Next.js or Prisma.  
 - Use dependency injection: pass repositories/services as params instead of creating inside cases.  
@@ -90,12 +116,13 @@ Example: "Use functional components and hooks for React UI."
 - Refactor gradually: apply the Boy Scout rule (leave code cleaner than found).  
 - Keep dependencies up-to-date; remove unused packages.
 
-### 3.10 Cursor Agent Behaviour  
+### 3.12 Cursor Agent Behaviour  
 
 - When Cursor generates code, it **must** follow all above rules.  
 - When Cursor proposes refactors, it **must** maintain the directory structure and layering, and explain its decisions.  
 - When Cursor creates documentation, it **must** update the README/docs accordingly.  
 - When Cursor has a design decision ambiguity, it should choose simplicity, clarity, separation of concerns, and document the choice.
+- Before marking a task as complete, Cursor must verify: TypeScript errors cleared, tests pass, build succeeds.
 
 ---
 

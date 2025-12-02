@@ -29,7 +29,7 @@ describe('GET /api/categorias/[id]', () => {
     (authModule.auth as jest.Mock).mockResolvedValue(null);
 
     const request = new NextRequest('http://localhost:3000/api/categorias/1');
-    const response = await GET(request, { params: { id: '1' } });
+    const response = await GET(request, { params: Promise.resolve({ id: '1' }) });
     const data = await response.json();
 
     expect(response.status).toBe(401);
@@ -51,7 +51,7 @@ describe('GET /api/categorias/[id]', () => {
     (categoriaService.getCategoriaById as jest.Mock).mockResolvedValue(mockCategoria);
 
     const request = new NextRequest('http://localhost:3000/api/categorias/1');
-    const response = await GET(request, { params: { id: '1' } });
+    const response = await GET(request, { params: Promise.resolve({ id: '1' }) });
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -65,7 +65,7 @@ describe('GET /api/categorias/[id]', () => {
     (categoriaService.getCategoriaById as jest.Mock).mockResolvedValue(null);
 
     const request = new NextRequest('http://localhost:3000/api/categorias/999');
-    const response = await GET(request, { params: { id: '999' } });
+    const response = await GET(request, { params: Promise.resolve({ id: '999' }) });
     const data = await response.json();
 
     expect(response.status).toBe(404);
@@ -76,7 +76,7 @@ describe('GET /api/categorias/[id]', () => {
     (authModule.auth as jest.Mock).mockResolvedValue({ user: { id: '1' } });
 
     const request = new NextRequest('http://localhost:3000/api/categorias/abc');
-    const response = await GET(request, { params: { id: 'abc' } });
+    const response = await GET(request, { params: Promise.resolve({ id: 'abc' }) });
     const data = await response.json();
 
     expect(response.status).toBe(400);
@@ -88,7 +88,7 @@ describe('GET /api/categorias/[id]', () => {
     (categoriaService.getCategoriaById as jest.Mock).mockRejectedValue(new Error('Database error'));
 
     const request = new NextRequest('http://localhost:3000/api/categorias/1');
-    const response = await GET(request, { params: { id: '1' } });
+    const response = await GET(request, { params: Promise.resolve({ id: '1' }) });
     const data = await response.json();
 
     expect(response.status).toBe(500);
@@ -109,7 +109,7 @@ describe('PUT /api/categorias/[id]', () => {
       body: JSON.stringify({ nombre: 'Sub 10 Actualizada' }),
     });
 
-    const response = await PUT(request, { params: { id: '1' } });
+    const response = await PUT(request, { params: Promise.resolve({ id: '1' }) });
     const data = await response.json();
 
     expect(response.status).toBe(401);
@@ -135,7 +135,7 @@ describe('PUT /api/categorias/[id]', () => {
       body: JSON.stringify({ nombre: 'Sub 10 Actualizada' }),
     });
 
-    const response = await PUT(request, { params: { id: '1' } });
+    const response = await PUT(request, { params: Promise.resolve({ id: '1' }) });
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -151,7 +151,7 @@ describe('PUT /api/categorias/[id]', () => {
       body: JSON.stringify({ nombre: 'Sub 10 Actualizada' }),
     });
 
-    const response = await PUT(request, { params: { id: '999' } });
+    const response = await PUT(request, { params: Promise.resolve({ id: '999' }) });
     const data = await response.json();
 
     expect(response.status).toBe(404);
@@ -166,7 +166,7 @@ describe('PUT /api/categorias/[id]', () => {
       body: JSON.stringify({ nombre: 'Sub 10 Actualizada' }),
     });
 
-    const response = await PUT(request, { params: { id: 'abc' } });
+    const response = await PUT(request, { params: Promise.resolve({ id: 'abc' }) });
     const data = await response.json();
 
     expect(response.status).toBe(400);
@@ -181,7 +181,7 @@ describe('PUT /api/categorias/[id]', () => {
       body: JSON.stringify({ nombre: '' }),
     });
 
-    const response = await PUT(request, { params: { id: '1' } });
+    const response = await PUT(request, { params: Promise.resolve({ id: '1' }) });
     const data = await response.json();
 
     expect(response.status).toBe(400);
@@ -196,7 +196,7 @@ describe('PUT /api/categorias/[id]', () => {
       body: JSON.stringify({ tipo: 'senior' }),
     });
 
-    const response = await PUT(request, { params: { id: '1' } });
+    const response = await PUT(request, { params: Promise.resolve({ id: '1' }) });
     const data = await response.json();
 
     expect(response.status).toBe(400);
@@ -211,7 +211,7 @@ describe('PUT /api/categorias/[id]', () => {
       body: JSON.stringify({ genero: 'X' }),
     });
 
-    const response = await PUT(request, { params: { id: '1' } });
+    const response = await PUT(request, { params: Promise.resolve({ id: '1' }) });
     const data = await response.json();
 
     expect(response.status).toBe(400);
@@ -229,7 +229,7 @@ describe('PUT /api/categorias/[id]', () => {
       body: JSON.stringify({ nombre: 'Test' }),
     });
 
-    const response = await PUT(request, { params: { id: '1' } });
+    const response = await PUT(request, { params: Promise.resolve({ id: '1' }) });
     const data = await response.json();
 
     expect(response.status).toBe(400);
@@ -247,7 +247,7 @@ describe('PUT /api/categorias/[id]', () => {
       body: JSON.stringify({ nombre: 'Test' }),
     });
 
-    const response = await PUT(request, { params: { id: '1' } });
+    const response = await PUT(request, { params: Promise.resolve({ id: '1' }) });
     const data = await response.json();
 
     expect(response.status).toBe(500);
@@ -267,7 +267,7 @@ describe('DELETE /api/categorias/[id]', () => {
       method: 'DELETE',
     });
 
-    const response = await DELETE(request, { params: { id: '1' } });
+    const response = await DELETE(request, { params: Promise.resolve({ id: '1' }) });
     const data = await response.json();
 
     expect(response.status).toBe(401);
@@ -282,7 +282,7 @@ describe('DELETE /api/categorias/[id]', () => {
       method: 'DELETE',
     });
 
-    const response = await DELETE(request, { params: { id: '1' } });
+    const response = await DELETE(request, { params: Promise.resolve({ id: '1' }) });
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -297,7 +297,7 @@ describe('DELETE /api/categorias/[id]', () => {
       method: 'DELETE',
     });
 
-    const response = await DELETE(request, { params: { id: '999' } });
+    const response = await DELETE(request, { params: Promise.resolve({ id: '999' }) });
     const data = await response.json();
 
     expect(response.status).toBe(404);
@@ -311,7 +311,7 @@ describe('DELETE /api/categorias/[id]', () => {
       method: 'DELETE',
     });
 
-    const response = await DELETE(request, { params: { id: 'abc' } });
+    const response = await DELETE(request, { params: Promise.resolve({ id: 'abc' }) });
     const data = await response.json();
 
     expect(response.status).toBe(400);
@@ -328,7 +328,7 @@ describe('DELETE /api/categorias/[id]', () => {
       method: 'DELETE',
     });
 
-    const response = await DELETE(request, { params: { id: '1' } });
+    const response = await DELETE(request, { params: Promise.resolve({ id: '1' }) });
     const data = await response.json();
 
     expect(response.status).toBe(409);
@@ -345,7 +345,7 @@ describe('DELETE /api/categorias/[id]', () => {
       method: 'DELETE',
     });
 
-    const response = await DELETE(request, { params: { id: '1' } });
+    const response = await DELETE(request, { params: Promise.resolve({ id: '1' }) });
     const data = await response.json();
 
     expect(response.status).toBe(500);
