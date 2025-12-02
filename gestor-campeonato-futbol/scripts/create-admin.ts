@@ -1,8 +1,16 @@
+import { neonConfig } from "@neondatabase/serverless";
+import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
 import { hash } from "bcryptjs";
+import ws from "ws";
+
+// Configure Neon to use WebSocket
+neonConfig.webSocketConstructor = ws;
 
 async function createAdmin() {
-  const prisma = new PrismaClient();
+  const connectionString = `${process.env.DATABASE_URL}`;
+  const adapter = new PrismaNeon({ connectionString });
+  const prisma = new PrismaClient({ adapter });
 
   try {
     // Check if admin user already exists

@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
-import { PrismaClient } from "@/generated/prisma/client";
+import { getPrismaClient } from "@/lib/prisma";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
@@ -17,7 +17,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
         }
 
-        const prisma = new PrismaClient();
+        const prisma = getPrismaClient();
         
         try {
           const user = await prisma.usuario.findUnique({

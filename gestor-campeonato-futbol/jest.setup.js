@@ -1,5 +1,10 @@
 // Learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom'
+import { TextEncoder, TextDecoder } from 'util'
+
+// Add TextEncoder and TextDecoder polyfills for Node.js environment
+global.TextEncoder = TextEncoder
+global.TextDecoder = TextDecoder
 
 // Mock next-auth
 jest.mock('next-auth/react', () => ({

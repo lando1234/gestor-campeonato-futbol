@@ -3,14 +3,14 @@
  * Handles all database operations for categorias
  */
 
-import { PrismaClient } from '@/generated/prisma/client';
+import { getPrismaClient } from '@/lib/prisma';
 import { CategoriaInput } from '@/types/categoria.types';
 
 /**
  * Get all categorias ordered by name
  */
 export async function getAllCategorias() {
-  const prisma = new PrismaClient();
+  const prisma = getPrismaClient();
   try {
     const categorias = await prisma.categoria.findMany({
       orderBy: {
@@ -30,7 +30,7 @@ export async function getAllCategorias() {
  * Get a specific categoria by ID
  */
 export async function getCategoriaById(id: number) {
-  const prisma = new PrismaClient();
+  const prisma = getPrismaClient();
   try {
     const categoria = await prisma.categoria.findUnique({
       where: {
@@ -50,7 +50,7 @@ export async function getCategoriaById(id: number) {
  * Create a new categoria
  */
 export async function createCategoria(data: CategoriaInput) {
-  const prisma = new PrismaClient();
+  const prisma = getPrismaClient();
   try {
     // Validate required fields
     if (!data.nombre || data.nombre.trim() === '') {
@@ -121,7 +121,7 @@ export async function createCategoria(data: CategoriaInput) {
  * Update an existing categoria
  */
 export async function updateCategoria(id: number, data: Partial<CategoriaInput>) {
-  const prisma = new PrismaClient();
+  const prisma = getPrismaClient();
   try {
     // Check if categoria exists
     const existing = await prisma.categoria.findUnique({
@@ -190,7 +190,7 @@ export async function updateCategoria(id: number, data: Partial<CategoriaInput>)
  * Delete a categoria
  */
 export async function deleteCategoria(id: number) {
-  const prisma = new PrismaClient();
+  const prisma = getPrismaClient();
   try {
     // Check if categoria exists
     const existing = await prisma.categoria.findUnique({
