@@ -84,8 +84,28 @@ export async function createCategoria(data: CategoriaInput) {
         : data.fecha_fin;
     }
 
-    const categoria = await prisma.categoria.create({
-      data: categoriaData,
+    // Use transaction to create categoria and its config
+    const categoria = await prisma.$transaction(async (tx) => {
+      // Create categoria
+      const newCategoria = await tx.categoria.create({
+        data: categoriaData,
+      });
+
+      // Create categoria_config with default values (all false/0)
+      await tx.categoria_config.create({
+        data: {
+          id_categoria: newCategoria.id_categoria,
+          jugadores: 0,
+          equipos: 0,
+          fixtures: 0,
+          posiciones: 0,
+          texto: null,
+          reglamento: 'empty',
+          ver_jugadores: 0,
+        },
+      });
+
+      return newCategoria;
     });
 
     return categoria;
@@ -191,8 +211,17 @@ export async function deleteCategoria(id: number) {
       throw new Error('No se puede eliminar la categoría porque tiene registros relacionados (equipos, inscripciones o fixtures)');
     }
 
-    await prisma.categoria.delete({
-      where: { id_categoria: id },
+    // Use transaction to delete categoria_config and categoria
+    await prisma.$transaction(async (tx) => {
+      // First delete categoria_config
+      await tx.categoria_config.deleteMany({
+        where: { id_categoria: id },
+      });
+
+      // Then delete categoria
+      await tx.categoria.delete({
+        where: { id_categoria: id },
+      });
     });
 
     return { success: true };

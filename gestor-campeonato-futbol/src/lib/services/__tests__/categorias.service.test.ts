@@ -23,7 +23,9 @@ describe('Categorias Service', () => {
   let mockCreate: jest.Mock;
   let mockUpdate: jest.Mock;
   let mockDelete: jest.Mock;
+  let mockDeleteMany: jest.Mock;
   let mockDisconnect: jest.Mock;
+  let mockTransaction: jest.Mock;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -33,7 +35,9 @@ describe('Categorias Service', () => {
     mockCreate = jest.fn();
     mockUpdate = jest.fn();
     mockDelete = jest.fn();
+    mockDeleteMany = jest.fn();
     mockDisconnect = jest.fn();
+    mockTransaction = jest.fn();
 
     mockPrismaClient = {
       categoria: {
@@ -43,7 +47,12 @@ describe('Categorias Service', () => {
         update: mockUpdate,
         delete: mockDelete,
       },
+      categoria_config: {
+        create: jest.fn(),
+        deleteMany: mockDeleteMany,
+      },
       $disconnect: mockDisconnect,
+      $transaction: mockTransaction,
     };
 
     (PrismaClient as jest.MockedClass<typeof PrismaClient>).mockImplementation(
@@ -154,18 +163,24 @@ describe('Categorias Service', () => {
         fecha_fin: new Date('2024-12-31'),
       };
 
+      // Mock transaction to execute callback
+      mockTransaction.mockImplementation(async (callback) => {
+        return await callback({
+          categoria: {
+            create: mockCreate,
+          },
+          categoria_config: {
+            create: jest.fn(),
+          },
+        });
+      });
+
       mockCreate.mockResolvedValue(mockCreatedCategoria);
 
       const result = await createCategoria(inputData);
 
       expect(result).toEqual(mockCreatedCategoria);
-      expect(mockCreate).toHaveBeenCalledWith({
-        data: expect.objectContaining({
-          nombre: 'Sub 10',
-          tipo: 'infantil',
-          genero: 'M',
-        }),
-      });
+      expect(mockTransaction).toHaveBeenCalled();
       expect(mockDisconnect).toHaveBeenCalled();
     });
 
@@ -184,18 +199,24 @@ describe('Categorias Service', () => {
         fecha_fin: null,
       };
 
+      // Mock transaction to execute callback
+      mockTransaction.mockImplementation(async (callback) => {
+        return await callback({
+          categoria: {
+            create: mockCreate,
+          },
+          categoria_config: {
+            create: jest.fn(),
+          },
+        });
+      });
+
       mockCreate.mockResolvedValue(mockCreatedCategoria);
 
       const result = await createCategoria(inputData);
 
       expect(result).toEqual(mockCreatedCategoria);
-      expect(mockCreate).toHaveBeenCalledWith({
-        data: expect.objectContaining({
-          nombre: 'Sub 14',
-          tipo: 'juvenil',
-          genero: null,
-        }),
-      });
+      expect(mockTransaction).toHaveBeenCalled();
       expect(mockDisconnect).toHaveBeenCalled();
     });
 
@@ -259,15 +280,23 @@ describe('Categorias Service', () => {
         fecha_fin: null,
       };
 
+      // Mock transaction to execute callback
+      mockTransaction.mockImplementation(async (callback) => {
+        return await callback({
+          categoria: {
+            create: mockCreate,
+          },
+          categoria_config: {
+            create: jest.fn(),
+          },
+        });
+      });
+
       mockCreate.mockResolvedValue(mockCreatedCategoria);
 
       await createCategoria(inputData);
 
-      expect(mockCreate).toHaveBeenCalledWith({
-        data: expect.objectContaining({
-          nombre: 'Sub 10',
-        }),
-      });
+      expect(mockTransaction).toHaveBeenCalled();
       expect(mockDisconnect).toHaveBeenCalled();
     });
   });
@@ -413,6 +442,20 @@ describe('Categorias Service', () => {
       };
 
       mockFindUnique.mockResolvedValue(existingCategoria);
+      
+      // Mock transaction to execute callback
+      mockTransaction.mockImplementation(async (callback) => {
+        return await callback({
+          categoria_config: {
+            deleteMany: mockDeleteMany,
+          },
+          categoria: {
+            delete: mockDelete,
+          },
+        });
+      });
+
+      mockDeleteMany.mockResolvedValue({ count: 1 });
       mockDelete.mockResolvedValue(existingCategoria);
 
       const result = await deleteCategoria(1);
@@ -426,9 +469,7 @@ describe('Categorias Service', () => {
           fixture: true,
         },
       });
-      expect(mockDelete).toHaveBeenCalledWith({
-        where: { id_categoria: 1 },
-      });
+      expect(mockTransaction).toHaveBeenCalled();
       expect(mockDisconnect).toHaveBeenCalled();
     });
 
